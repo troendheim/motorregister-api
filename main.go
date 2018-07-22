@@ -9,14 +9,21 @@ import (
 	"motorregister-api/config"
 )
 
+// Initialize application
 func main() {
-	fmt.Println("Starting server on port 8999")
-
+	// Read configuration
 	config := config.GetConfig()
 
+	// Get port from app.yml
+	serverPort := config.IntOr("port", 8999)
+	fmt.Println("Starting server on port", serverPort)
+
+	// Build routes
 	router := buildRouter(config)
 
+	// Get DB connection ready
 	utils.OpenConnection(config)
 
-	log.Fatal(http.ListenAndServe(":8999", router))
+	// Start server
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", serverPort), router))
 }

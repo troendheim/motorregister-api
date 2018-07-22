@@ -5,5 +5,13 @@
 ## Setup
 Er pt. baseret på MySQL og fungerer i version `5.7`.
 
-- Opret `config/app.yml` og udfyld dsn som her:
-```dsn: "username:password@tcp(hostname.dk)/dbname"```
+- Opret konfigurationsfilen `config/app.yml`.
+    Følgende felter findes:
+    - dsn **(Påkrævet)**
+    - port (Valgfri, default: 8999)
+
+    Eksempelvis:
+    ```
+    dsn: "username:password@tcp(hostname.dk)/dbname"
+    port: 8999
+    ```
