@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-func GetModelsAction(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func ModelZipStatistics(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
 
 	var models = models.GetModelCount(params.ByName("brand"), params.ByName("model"))
 
