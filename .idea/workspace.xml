@@ -2,10 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b0306f8f-61ce-4b87-9e47-ad51fb276049" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/controllers/VehicleController.go" beforeDir="false" afterPath="$PROJECT_DIR$/controllers/VehicleController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/vehicle/model.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/vehicle/model.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/router.go" beforeDir="false" afterPath="$PROJECT_DIR$/router.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/motorregister-api" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/motorregister-api_linux_amd64" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -67,14 +66,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="model.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/vehicle/model.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="101">
+            <state relative-caret-position="10">
               <caret line="39" column="40" selection-start-line="39" selection-start-column="40" selection-end-line="39" selection-end-column="40" />
               <folding>
                 <element signature="e#16#86#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="19" selection-start-column="19" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -145,6 +153,7 @@
         <option value="$PROJECT_DIR$/controllers/VehicleController.go" />
         <option value="$PROJECT_DIR$/router.go" />
         <option value="$PROJECT_DIR$/models/vehicle/model.go" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -174,27 +183,6 @@
             <path>
               <item name="motorregister-api" type="b2602c69:ProjectViewProjectNode" />
               <item name="motorregister-api" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="motorregister-api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="motorregister-api" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="motorregister-api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="motorregister-api" type="462c0819:PsiDirectoryNode" />
-              <item name="controllers" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="motorregister-api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="motorregister-api" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="motorregister-api" type="b2602c69:ProjectViewProjectNode" />
-              <item name="motorregister-api" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-              <item name="vehicle" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="motorregister-api" type="b2602c69:ProjectViewProjectNode" />
@@ -492,11 +480,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/models/vehicle/model.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="101">
+        <state relative-caret-position="10">
           <caret line="39" column="40" selection-start-line="39" selection-start-column="40" selection-end-line="39" selection-end-column="40" />
           <folding>
             <element signature="e#16#86#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="19" selection-start-column="19" selection-end-column="19" />
         </state>
       </provider>
     </entry>
