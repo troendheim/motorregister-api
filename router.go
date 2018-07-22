@@ -8,7 +8,9 @@ import (
 
 func buildRouter(config *cc.Config) *httprouter.Router {
 	router := httprouter.New()
+
 	router.GET("/statistics/model/:brand/:model", controllers.ModelZipStatistics)
+	router.GET("/models/:brand", controllers.Models)
 
 	return router
 }
