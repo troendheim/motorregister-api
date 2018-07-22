@@ -13,6 +13,8 @@ func ModelZipStatistics(response http.ResponseWriter, request *http.Request, par
 
 	var models = models.GetModelCount(params.ByName("brand"), params.ByName("model"))
 
+	response.Header().Set("Access-Control-Allow-Origin", "*")
+
 	fmt.Fprintf(response, "%s", jsonify.Jsonify(models))
 }
 
@@ -20,6 +22,8 @@ func ModelZipStatistics(response http.ResponseWriter, request *http.Request, par
 func Models(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
 
 	var models = models.Models(params.ByName("brand"))
+
+	response.Header().Set("Access-Control-Allow-Origin", "*")
 
 	fmt.Fprintf(response, "%s", jsonify.Jsonify(models))
 }
