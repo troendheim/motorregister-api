@@ -7,22 +7,23 @@ import (
 	"fmt"
 	"motorregister-api/utils"
 	"motorregister-api/config"
+	"github.com/spf13/viper"
 )
 
 // Initialize application
 func main() {
 	// Read configuration
-	config := config.GetConfig()
+	config.PrepareConfig()
 
 	// Get port from app.yml
-	serverPort := config.IntOr("port", 8999)
+	serverPort := viper.GetInt("port")
 	fmt.Println("Starting server on port", serverPort)
 
 	// Build routes
-	router := buildRouter(config)
+	router := buildRouter()
 
 	// Get DB connection ready
-	utils.OpenConnection(config)
+	utils.OpenConnection()
 
 	// Start server
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", serverPort), router))
