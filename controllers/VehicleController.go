@@ -11,7 +11,11 @@ import (
 
 // Get statistics for brand-model-zip
 func ModelZipStatistics(responseWriter http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	utils.SetCorsHeaders(request, &responseWriter)
+	var isPreFlight = utils.SetCorsHeaders(request, responseWriter)
+	if isPreFlight {
+		ModelZipStatistics(responseWriter, request, params)
+		return
+	}
 
 	var models = models.GetModelCount(params.ByName("brand"), params.ByName("model"))
 	fmt.Fprint(responseWriter, jsonify.Jsonify(models))
