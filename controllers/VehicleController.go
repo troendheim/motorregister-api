@@ -15,7 +15,7 @@ func ModelZipStatistics(response http.ResponseWriter, request *http.Request, par
 
 	response.Header().Set("Access-Control-Allow-Origin", "*")
 
-	fmt.Fprintf(response, "%s", jsonify.Jsonify(models))
+	fmt.Fprint(response, jsonify.Jsonify(models))
 }
 
 // Get possible models for brand
@@ -25,5 +25,5 @@ func Models(response http.ResponseWriter, request *http.Request, params httprout
 
 	response.Header().Set("Access-Control-Allow-Origin", "*")
 
-	fmt.Fprintf(response, "%s", jsonify.Jsonify(models))
+	fmt.Fprint(response, jsonify.Jsonify(models))
 }
