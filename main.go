@@ -12,6 +12,9 @@ import (
 
 // Initialize application
 func main() {
+	// Start up the cache
+	utils.StartCache()
+
 	// Read configuration
 	config.PrepareConfig()
 

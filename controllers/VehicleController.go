@@ -18,16 +18,37 @@ func ModelZipStatistics(response http.ResponseWriter, request *http.Request, par
 }
 
 // Get possible models for brand
-func Models(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	utils.SetHTTPHeaders(response)
+func Models(responseWriter http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	utils.SetHTTPHeaders(responseWriter)
 
-	var models = models.Models(params.ByName("brand"))
-	fmt.Fprint(response, jsonify.Jsonify(models))
+	var brandName = params.ByName("brand")
+
+	var cacheKey = fmt.Sprintf("cached_response_brands_%s", brandName);
+
+	var response, cacheError = utils.GetFromCache(cacheKey)
+	if cacheError != nil {
+		var models = models.Models(brandName)
+		response = utils.ConvertStringSliceToString(jsonify.Jsonify(models))
+
+		utils.SetCache(cacheKey, response)
+	}
+
+
+	fmt.Fprint(responseWriter, response)
 }
 
-func Brands(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
-	utils.SetHTTPHeaders(response)
+func Brands(responseWriter http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	utils.SetHTTPHeaders(responseWriter)
 
-	var brands = models.Brands()
-	fmt.Fprint(response, jsonify.Jsonify(brands))
+	var cacheKey = "cached_response_brands";
+
+	var response, cacheError = utils.GetFromCache(cacheKey)
+	if cacheError != nil {
+		var brands = models.Brands()
+		response = utils.ConvertStringSliceToString(jsonify.Jsonify(brands))
+
+		utils.SetCache(cacheKey, response)
+	}
+
+	fmt.Fprint(responseWriter, response)
 }
