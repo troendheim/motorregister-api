@@ -10,6 +10,7 @@ func buildRouter() *httprouter.Router {
 
 	router.GET("/statistics/model/:brand/:model", controllers.ModelZipStatistics)
 	router.GET("/models/:brand", controllers.Models)
+	router.GET("/brands", controllers.Brands)
 
 	return router
 }
