@@ -10,8 +10,6 @@ Hostes på https://api.troendheim.dk og benyttes af https://statistik.troendheim
 - MySQL. Testet i `5.7`.
 
 ## Setup
-Kræver MySQL `5.7`.
-
 1) Klon projektet
 2) Opret konfigurationsfilen `config/app.yml`. Følgende felter findes:
     - dsn **(Påkrævet)**
