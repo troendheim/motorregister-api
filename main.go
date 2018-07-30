@@ -8,19 +8,21 @@ import (
 	"motorregister-api/utils"
 	"motorregister-api/config"
 	"github.com/spf13/viper"
+	"flag"
+	"motorregister-api/migration"
 )
 
 // Initialize application
 func main() {
+	// Init flags
+	dataImportFile := flag.String("dataImportFile", "", "Set -dataImportFile flag to start migration based on json file")
+	flag.Parse()
+
 	// Start up the cache
 	utils.StartCache()
 
 	// Read configuration
 	config.PrepareConfig()
-
-	// Get port from app.yml
-	serverPort := viper.GetInt("port")
-	fmt.Println("Starting server on port", serverPort)
 
 	// Build routes
 	router := buildRouter()
@@ -28,6 +30,13 @@ func main() {
 	// Get DB connection ready
 	utils.OpenConnection()
 
+	if *dataImportFile != "" {
+		migration.Import(dataImportFile)
+	}
+
 	// Start server
+	// Get port from app.yml
+	serverPort := viper.GetInt("port")
+	fmt.Println("Starting server on port", serverPort)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", serverPort), router))
 }
