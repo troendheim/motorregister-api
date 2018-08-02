@@ -15,7 +15,9 @@ func OpenConnection() {
 
 	Database, error = sql.Open("mysql", viper.GetString("dsn"))
 
-	Database.SetConnMaxLifetime(time.Second * 10)
+	Database.SetConnMaxLifetime(time.Minute * 2)
+	Database.SetMaxOpenConns(20)
+	Database.SetMaxIdleConns(5)
 
 	if error != nil {
 		log.Fatalf("Error on initializing database connection: %s", error.Error())

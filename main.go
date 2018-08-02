@@ -32,11 +32,11 @@ func main() {
 
 	if *dataImportFile != "" {
 		migration.Import(dataImportFile)
+	} else {
+		// Start server
+		// Get port from app.yml
+		serverPort := viper.GetInt("port")
+		fmt.Println("Starting server on port", serverPort)
+		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", serverPort), router))
 	}
-
-	// Start server
-	// Get port from app.yml
-	serverPort := viper.GetInt("port")
-	fmt.Println("Starting server on port", serverPort)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", serverPort), router))
 }

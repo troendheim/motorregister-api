@@ -8,6 +8,9 @@ import (
 	"path/filepath"
 	"os"
 	"strings"
+	"motorregister-api/models/location"
+	"net/http"
+	"encoding/json"
 )
 
 func Import(dataImportFileLocation *string) {
@@ -18,7 +21,8 @@ func Import(dataImportFileLocation *string) {
 	}
 
 	applyPatches()
-	doImport(gjson.Parse(string(importFileContents)))
+	doImportStatistics(gjson.Parse(string(importFileContents)))
+	doImportZipcodeData()
 }
 
 // Apply patches from ./db/ folder
@@ -38,23 +42,40 @@ func applyPatches() {
 
 			var queries = strings.Split(fullQueryContent, ";")
 			for index, query := range queries {
-				fmt.Printf(".... Query %v\n", index + 1)
+				if query == "\n" {
+					continue
+				}
+				fmt.Printf(".... Query %v\n", index+1)
 				utils.Database.Exec(query)
 			}
 		}
-
 
 		return nil
 	})
 }
 
 // Import statistics from data json and insert into DB
-func doImport(importFileJson gjson.Result) {
+func doImportStatistics(importFileJson gjson.Result) {
 	totalCount := importFileJson.Get("count").Int()
-	fmt.Printf("\nStarting import of statistcs based on '%v' vehicles\n", totalCount)
+	fmt.Printf("\nStarting import of statistics based on '%v' vehicles\n", totalCount)
 
 	importFileJson.Get("data").ForEach(func(zipCode, zipCodeData gjson.Result) bool {
-		fmt.Printf(".. Importing zip code '%s' \n", zipCode)
+		fmt.Printf(".. Importing zip code '%s' ", zipCode)
+
+		// Insert zip if not exists
+		utils.Database.Exec(`
+				INSERT INTO zip_code (zip_code)
+				VALUES (?)
+				ON DUPLICATE KEY UPDATE zip_code = zip_code
+			`, zipCode.String())
+
+		var zipCodeId int
+		utils.Database.QueryRow(`
+				SELECT	id
+				FROM	zip_code
+				WHERE	zip_code = ?
+			`, zipCode.String()).Scan(&zipCodeId)
+
 		zipCodeData.ForEach(func(makeName, models gjson.Result) bool {
 			// Insert make if not exists
 			utils.Database.Exec(`
@@ -63,39 +84,87 @@ func doImport(importFileJson gjson.Result) {
 				ON DUPLICATE KEY UPDATE name = name
 			`, makeName.String())
 
+			var brandId int
+			utils.Database.QueryRow(`
+				SELECT	id
+				FROM	brand
+				WHERE	name = ?
+			`, makeName.String()).Scan(&brandId)
+
 			models.ForEach(func(modelName, modelCount gjson.Result) bool {
 				// Insert model
 				utils.Database.Exec(`
 					INSERT IGNORE INTO model (name, brand_id)
-					VALUES (
-						?,
-						( SELECT id
-						  FROM brand
-                          WHERE name = ?
-					)
+					VALUES (?, ?)
 					ON DUPLICATE KEY UPDATE name = name
-				`, modelName.String(), makeName.String())
+				`, modelName.String(), brandId)
+
+				var modelId int
+				utils.Database.QueryRow(`
+					SELECT	id
+					FROM	model
+					WHERE	brand_id = ? AND name = ?
+				`, brandId, modelName.String()).Scan(&modelId)
 
 				// Add stats
 				utils.Database.Exec(`
 					INSERT INTO model_2_zip_count
-					VALUES (
-						# Zip code
-						(SELECT id FROM zip_code WHERE zip_code = ?),
-
-						# Model id
-						(SELECT id FROM model WHERE name = ?),
-
-						# Count
-						?
-					)
-				`, zipCode.Int(), modelName.String(), totalCount)
+					VALUES (?, ?, ?)
+				`, zipCodeId, modelId, modelCount.Int())
 
 				return true
 			})
 			return true
 		})
 
+		var currentDoneCount int64
+		utils.Database.QueryRow(`
+			SELECT	SUM(total_count) as currentDoneCount
+			FROM	model_2_zip_count
+		`).Scan(&currentDoneCount)
+
+		fmt.Printf("-- %v%% of all vehicles loaded \n", float32(currentDoneCount) * float32(100) / float32(totalCount))
+
 		return true
 	})
+}
+
+type geocodeResponse struct {
+	Results []struct {
+		Geometry struct {
+			Location struct {
+				Lat float64
+				Lng float64
+			}
+		}
+	}
+}
+
+func doImportZipcodeData() {
+	var zipCodes = models.GetAllZipCodes()
+
+	fmt.Println("\nImporting locations for zip codes")
+
+	for zipCodes.Next() {
+		var zipCode int
+		zipCodes.Scan(&zipCode)
+
+		fmt.Sprintf(".. %v\n", zipCode)
+
+		var response, err = http.Get(fmt.Sprintf("http://www.datasciencetoolkit.org/maps/api/geocode/json?sensor=false&address=%v,DK", zipCode))
+		if err != nil {
+			panic(err.Error())
+		}
+
+		responseBody := &geocodeResponse{}
+		json.NewDecoder(response.Body).Decode(&responseBody)
+
+		location := responseBody.Results[0].Geometry.Location
+
+		utils.Database.Exec(`
+			UPDATE	zip_code
+			SET		latitude = ?, longtitude = ?
+			WHERE	zip_code = ?
+		`, location.Lat, location.Lng, zipCode)
+	}
 }

@@ -1,10 +1,8 @@
-# Drop all tables
 DROP TABLE IF EXISTS model_2_zip_count;
 DROP TABLE IF EXISTS model;
 DROP TABLE IF EXISTS brand;
 DROP TABLE IF EXISTS zip_code;
 
-# Zip codes
 create table zip_code (
   id int(11) unsigned not null auto_increment,
   zip_code int(11) unsigned not null,
@@ -13,7 +11,6 @@ create table zip_code (
   KEY (zip_code)
 );
 
-# Makes
 create table brand (
   id int(11) unsigned not null auto_increment,
   name varchar(255) not null,
@@ -22,7 +19,6 @@ create table brand (
   key (name)
 );
 
-# Models
 create table model (
   id int(11) unsigned not null auto_increment,
   name varchar(255) not null,
@@ -35,7 +31,6 @@ create table model (
   KEY (name)
 );
 
-# Statistics table
 create table model_2_zip_count (
   zip_code_id int(11) unsigned not null,
   model_id int(11) unsigned not null,
