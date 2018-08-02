@@ -13,8 +13,8 @@ import (
 func ModelZipStatistics(response http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	utils.SetHTTPHeaders(response)
 
-	var models = models.GetModelCount(params.ByName("brand"), params.ByName("model"))
-	fmt.Fprint(response, jsonify.Jsonify(models))
+	var modelStatistics = models.GetModelCount(params.ByName("brand"), params.ByName("model"))
+	fmt.Fprint(response, "[" + utils.ConvertStringSliceToString(jsonify.Jsonify(modelStatistics)) + "]")
 }
 
 // Get possible models for brand
@@ -27,8 +27,8 @@ func Models(responseWriter http.ResponseWriter, request *http.Request, params ht
 
 	var response, cacheError = utils.GetFromCache(cacheKey)
 	if cacheError != nil {
-		var models = models.Models(brandName)
-		response = utils.ConvertStringSliceToString(jsonify.Jsonify(models))
+		var modelsForBrand = models.Models(brandName)
+		response = "[" + utils.ConvertStringSliceToString(jsonify.Jsonify(modelsForBrand)) + "]"
 
 		utils.SetCache(cacheKey, response)
 	}
@@ -45,7 +45,7 @@ func Brands(responseWriter http.ResponseWriter, request *http.Request, params ht
 	var response, cacheError = utils.GetFromCache(cacheKey)
 	if cacheError != nil {
 		var brands = models.Brands()
-		response = utils.ConvertStringSliceToString(jsonify.Jsonify(brands))
+		response = "[" + utils.ConvertStringSliceToString(jsonify.Jsonify(brands)) + "]"
 
 		utils.SetCache(cacheKey, response)
 	}
