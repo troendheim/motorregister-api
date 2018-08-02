@@ -14,7 +14,7 @@ func ModelZipStatistics(response http.ResponseWriter, request *http.Request, par
 	utils.SetHTTPHeaders(response)
 
 	var modelStatistics = models.GetModelCount(params.ByName("brand"), params.ByName("model"))
-	fmt.Fprint(response, "[" + utils.ConvertStringSliceToString(jsonify.Jsonify(modelStatistics)) + "]")
+	fmt.Fprint(response, jsonify.Jsonify(modelStatistics))
 }
 
 // Get possible models for brand
