@@ -1,7 +1,5 @@
 # Motorregister API - Statistik/data
 
-**UNDER UDVIKLING - ENDNU IKKE STABIL**
-
 Hostes på https://api.troendheim.dk og benyttes af https://statistik.troendheim.dk/
 
 ## Systemkrav
