@@ -1,2 +1,2 @@
 ALTER TABLE brand
-  ADD UNIQUE(`name`);
+  ADD CONSTRAINT brand_unique_name UNIQUE(`name`);
