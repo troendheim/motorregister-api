@@ -151,7 +151,7 @@ func doImportZipcodeData() {
 
 		fmt.Sprintf(".. %v\n", zipCode)
 
-		var response, err = http.Get(fmt.Sprintf("http://www.datasciencetoolkit.org/maps/api/geocode/json?sensor=false&address=%v,DK", zipCode))
+		var response, err = http.Get(fmt.Sprintf("http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=%v,Denmark", zipCode))
 		if err != nil {
 			panic(err.Error())
 		}
