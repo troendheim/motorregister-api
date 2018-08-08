@@ -1,7 +1,7 @@
 package models
 
 import (
-	"motorregister-api/utils"
+	"../../utils"
 	"database/sql"
 )
 

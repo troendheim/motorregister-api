@@ -4,11 +4,11 @@ import (
 	"io/ioutil"
 	"github.com/tidwall/gjson"
 	"fmt"
-	"motorregister-api/utils"
+	"../utils"
 	"path/filepath"
 	"os"
 	"strings"
-	"motorregister-api/models/location"
+	"../models/location"
 	"net/http"
 	"encoding/json"
 )

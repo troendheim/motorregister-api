@@ -5,11 +5,11 @@ import (
 	"net/http"
 	_ "github.com/go-sql-driver/mysql"
 	"fmt"
-	"motorregister-api/utils"
-	"motorregister-api/config"
+	"./utils"
+	"./config"
 	"github.com/spf13/viper"
 	"flag"
-	"motorregister-api/migration"
+	"./migration"
 )
 
 // Initialize application
@@ -25,7 +25,7 @@ func main() {
 	config.PrepareConfig()
 
 	// Build routes
-	router := buildRouter()
+	router := BuildRouter()
 
 	// Get DB connection ready
 	utils.OpenConnection()

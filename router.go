@@ -2,10 +2,10 @@ package main
 
 import (
 	"github.com/julienschmidt/httprouter"
-	"motorregister-api/controllers"
+	"./controllers"
 )
 
-func buildRouter() *httprouter.Router {
+func BuildRouter() *httprouter.Router {
 	router := httprouter.New()
 
 	router.GET("/statistics/model/:brand/:model", controllers.ModelZipStatistics)

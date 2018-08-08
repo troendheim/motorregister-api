@@ -3,10 +3,10 @@ package controllers
 import (
 	"net/http"
 	"github.com/julienschmidt/httprouter"
-	"motorregister-api/models/vehicle"
+	"../models/vehicle"
 	"fmt"
 	"github.com/bdwilliams/go-jsonify/jsonify"
-	"motorregister-api/utils"
+	"../utils"
 )
 
 // Get statistics for brand-model-zip
