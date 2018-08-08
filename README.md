@@ -18,7 +18,8 @@ Hostes på https://api.troendheim.dk og benyttes af https://statistik.troendheim
      dsn: "username:password@tcp(hostname.dk)/dbname"
      port: 8999
     ```
-3) Byg med `go build`. Hent deps med `get get github.com/{dep-navn}`, hvis (når) den fejler. Jeg har ikke kompileret binaries endnu, men det er den langsigtede plan.
+2) Hent dependencies med `go get -d ./...` når du står i projektets rod.
+3) Byg med `go build`. 
 4) Kør import og patches. Kald den eksekverbare fil med dataImportFile parameteren. 
     
     `./motorregister-api -dataImportFile migration/data.json`.
