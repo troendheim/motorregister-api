@@ -5,15 +5,14 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+	"math"
 	"os"
 )
 
 type xmlVehicleBaseStructure struct {
-
 }
 
 type xmlVehicleDescriptionStructure struct {
-
 }
 
 type xmlVehicle struct {
@@ -25,17 +24,17 @@ type xmlVehicle struct {
 			} `xml:"Model"`
 		} `xml:"KoeretoejBetegnelseStruktur"`
 	} `xml:"KoeretoejOplysningGrundStruktur"`
-	ZipCode int `xml:"AdressePostNummer"`
+	ZipCode      int    `xml:"AdressePostNummer"`
 	LicensePlate string `xml:"RegistreringNummerNummer"`
 }
 
 type result struct {
 	Count int
-	Data struct {
-		ZipCode map[int] struct {
-			Brand map[string] struct {
-				Model map[string] struct {
-					count int
+	Data  struct {
+		ZipCode map[int]struct {
+			Brand map[string]struct {
+				Model map[string]struct {
+					Count int
 				}
 			}
 		}
@@ -44,9 +43,10 @@ type result struct {
 
 func importRawData(importFile *os.File) {
 
-	fmt.Println("Starting conversion ..")
+	fmt.Println("Starting conversion:")
 
-	var resultData result
+	resultData := map[int]map[string]map[string]int{}
+	totalCount := 0
 
 	xmlDecoder := xml.NewDecoder(importFile)
 	for {
@@ -64,25 +64,28 @@ func importRawData(importFile *os.File) {
 
 				if err := xmlDecoder.DecodeElement(&vehicleData, &tokenType); err != nil {
 					utils.CheckError(err)
-					// handle error
 				}
 
 				if vehicleData.ZipCode == 0 {
 					continue
 				}
+				if resultData[vehicleData.ZipCode] == nil {
+					resultData[vehicleData.ZipCode] = map[string]map[string]int{}
+				}
+				if resultData[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand] == nil {
+					resultData[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand] = map[string]int{}
+				}
 
-				resultData.Count++
+				resultData[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Model.ModelName]++
 
-				resultData.Data.ZipCode[vehicleData.ZipCode] = map[string]{map[string] = 1}
-
-
-				//[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Model.ModelName] = 1
-
-				fmt.Println(vehicleData.LicensePlate, vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand, vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Model.ModelName, vehicleData.ZipCode)
-
-				// do something with vehicleData
+				totalCount++
+				if math.Mod(float64(totalCount), 125) == 0 {
+					fmt.Printf("\r... Parsed %v entries", totalCount)
+				}
 			}
 		}
 	}
+
+	// @TODO: Convert resultData to JSON based and place file in migration
 
 }
