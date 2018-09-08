@@ -2,18 +2,14 @@ package migration
 
 import (
 	"../utils"
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"math"
 	"os"
 )
-
-type xmlVehicleBaseStructure struct {
-}
-
-type xmlVehicleDescriptionStructure struct {
-}
 
 type xmlVehicle struct {
 	BaseStructure struct {
@@ -26,29 +22,23 @@ type xmlVehicle struct {
 	} `xml:"KoeretoejOplysningGrundStruktur"`
 	ZipCode      int    `xml:"AdressePostNummer"`
 	LicensePlate string `xml:"RegistreringNummerNummer"`
+	Status       string `xml:"KoeretoejRegistreringStatus"`
 }
 
-type result struct {
-	Count int
-	Data  struct {
-		ZipCode map[int]struct {
-			Brand map[string]struct {
-				Model map[string]struct {
-					Count int
-				}
-			}
-		}
-	}
+type importResult struct {
+	Count int                               `json:"count"`
+	Data  map[int]map[string]map[string]int `json:"data"`
 }
 
 func importRawData(importFile *os.File) {
 
 	fmt.Println("Starting conversion:")
 
-	resultData := map[int]map[string]map[string]int{}
+	resultDataMap := map[int]map[string]map[string]int{}
 	totalCount := 0
 
 	xmlDecoder := xml.NewDecoder(importFile)
+
 	for {
 		token, tokenErr := xmlDecoder.Token()
 		if tokenErr != nil {
@@ -66,26 +56,36 @@ func importRawData(importFile *os.File) {
 					utils.CheckError(err)
 				}
 
-				if vehicleData.ZipCode == 0 {
+				if vehicleData.ZipCode == 0 || vehicleData.Status == "Afmeldt" {
 					continue
 				}
-				if resultData[vehicleData.ZipCode] == nil {
-					resultData[vehicleData.ZipCode] = map[string]map[string]int{}
+				if resultDataMap[vehicleData.ZipCode] == nil {
+					resultDataMap[vehicleData.ZipCode] = map[string]map[string]int{}
 				}
-				if resultData[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand] == nil {
-					resultData[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand] = map[string]int{}
+				if resultDataMap[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand] == nil {
+					resultDataMap[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand] = map[string]int{}
 				}
 
-				resultData[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Model.ModelName]++
+				resultDataMap[vehicleData.ZipCode][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Brand][vehicleData.BaseStructure.XmlVehicleDescriptionStructure.Model.ModelName]++
 
 				totalCount++
-				if math.Mod(float64(totalCount), 125) == 0 {
-					fmt.Printf("\r... Parsed %v entries", totalCount)
+				if math.Mod(float64(totalCount), 500) == 0 {
+					fmt.Printf("\r... Parsed %v entries\n", totalCount)
 				}
 			}
 		}
 	}
 
-	// @TODO: Convert resultData to JSON based and place file in migration
+	result := importResult{
+		Count: totalCount,
+		Data:  resultDataMap,
+	}
 
+	a, err := json.Marshal(result)
+
+	utils.CheckError(err)
+
+	ioutil.WriteFile("migration/data.json", a, 644)
+
+	fmt.Println("Done. Wrote to migration/data.json")
 }
