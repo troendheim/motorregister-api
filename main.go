@@ -1,42 +1,51 @@
 package main
 
 import (
+	"./config"
+	"./migration"
+	"./utils"
+	"flag"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
-	_ "github.com/go-sql-driver/mysql"
-	"fmt"
-	"./utils"
-	"./config"
-	"github.com/spf13/viper"
-	"flag"
-	"./migration"
 )
 
 // Initialize application
 func main() {
 	// Init flags
-	dataImportFile := flag.String("dataImportFile", "", "Set -dataImportFile flag to start migration based on json file")
+	normalizedDataImportFile := flag.String("normalizedDataImportFile", "", "Set -normalizedDataImportFile flag to start migration based on json file")
+	rawDataImportFile := flag.String("rawDataImportFile", "", "Set -rawDataImportFile flag to start migration based on raw XML")
 	flag.Parse()
-
-	// Start up the cache
-	utils.StartCache()
 
 	// Read configuration
 	config.PrepareConfig()
 
-	// Build routes
-	router := BuildRouter()
-
 	// Get DB connection ready
 	utils.OpenConnection()
 
-	if *dataImportFile != "" {
-		migration.Import(dataImportFile)
+	if *normalizedDataImportFile != "" {
+
+		migration.Import("normalized", normalizedDataImportFile)
+
+	} else if *rawDataImportFile != "" {
+
+		migration.Import("raw", rawDataImportFile)
+
 	} else {
-		// Start server
+
+		// Start up the cache
+		utils.StartCache()
+
+		// Build routes
+		router := BuildRouter()
+
 		// Get port from app.yml
 		serverPort := viper.GetInt("port")
 		fmt.Println("Starting server on port", serverPort)
+
+		// Start server
 		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", serverPort), router))
 	}
 }
