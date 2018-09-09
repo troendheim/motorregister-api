@@ -14,13 +14,6 @@ func importNormalizedDataToDB(importFileJson gjson.Result) {
 	importFileJson.Get("data").ForEach(func(zipCode, zipCodeData gjson.Result) bool {
 		fmt.Printf(".. Importing zip code '%s' ", zipCode)
 
-		// Insert zip if not exists
-		utils.Database.Exec(`
-				INSERT INTO zip_code (zip_code)
-				VALUES (?)
-				ON DUPLICATE KEY UPDATE zip_code = zip_code
-			`, zipCode.String())
-
 		var zipCodeId int
 		utils.Database.QueryRow(`
 				SELECT	id

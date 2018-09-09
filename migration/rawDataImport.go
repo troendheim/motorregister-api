@@ -45,7 +45,6 @@ func importRawData(importFile *os.File) {
 			if tokenErr == io.EOF {
 				break
 			}
-			// handle error
 		}
 		switch tokenType := token.(type) {
 		case xml.StartElement:

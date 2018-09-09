@@ -14,14 +14,17 @@ func Import(importType string, dataImportFileLocation *string) {
 		utils.CheckError(err)
 
 		applyPatches()
-		importNormalizedDataToDB(gjson.Parse(string(importFileContents)))
 		importZipCodeData()
+		importNormalizedDataToDB(gjson.Parse(string(importFileContents)))
 	case "raw":
-
 		importFileReader, err := os.Open(*dataImportFileLocation)
 		utils.CheckError(err)
 
 		importRawData(importFileReader)
+
+	case "zip_code_data":
+
+		importZipCodeData()
 	}
 
 }
