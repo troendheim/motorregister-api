@@ -3,9 +3,8 @@
 Hostes på https://api.troendheim.dk og benyttes af https://statistik.troendheim.dk/
 
 ## Systemkrav
-- Kompatibel med Linux og OSX. Med al sandsynlighed også Windows, men er ikke testet.
-- Golang. Testet i `1.10.3`.
-- MySQL. Testet i `5.7`.
+- Golang @ `1.11`.
+- MySQL @ `5.7`.
 
 ## Setup
 1) Klon projektet
