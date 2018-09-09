@@ -17,7 +17,7 @@ func main() {
 	// Init flags
 	normalizedDataImportFile := flag.String("normalizedDataImportFile", "", "Set -normalizedDataImportFile flag to start migration based on json file")
 	rawDataImportFile := flag.String("rawDataImportFile", "", "Set -rawDataImportFile flag to start migration based on raw XML")
-	importZipDataFlag := flag.Bool("importZipData", true, "Set -importZipData flag to start import of zip code data")
+	importZipDataFlag := flag.Bool("importZipData", false, "Set -importZipData flag to start import of zip code data")
 	flag.Parse()
 
 	// Read configuration
