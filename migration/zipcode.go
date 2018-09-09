@@ -18,7 +18,7 @@ func importZipCodeData() {
 	fmt.Println("Importing locations for zip codes")
 
 	// Fetch from DAWA
-	var zipCodeDataFromDawaResponse, err = http.Get("https://dawa.aws.dk/postnumre")
+	var zipCodeDataFromDawaResponse, err = http.Get("http://dawa.aws.dk/postnumre")
 	utils.CheckError(err)
 	zipCodeDataFromDawa := &geocodeResponseArray{}
 	json.NewDecoder(zipCodeDataFromDawaResponse.Body).Decode(&zipCodeDataFromDawa)
