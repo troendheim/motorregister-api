@@ -19,11 +19,11 @@ Hostes på https://api.troendheim.dk og benyttes af https://statistik.troendheim
     ```
 2) Hent dependencies med `go get -d ./...` når du står i projektets rod.
 3) Byg med `go build`. 
-4) Kør import og patches. Kald den eksekverbare fil med dataImportFile parameteren. 
+4) Kør import og patches. Kald den eksekverbare fil med normalizedDataImportFile parameteren. 
     
-    `./motorregister-api -dataImportFile migration/data.json`.
+    `./motorregister-api -normalizedDataImportFile migration/data.json`.
      
-     Data.json findes i migration mappen og er et snapshot fra motorregisterets eksport  2018-04-28. Vær opmærksom på, at patch-systemet ikke holder styr på, hvad der tidligere er kørt, så den rydder tabellerne først.
+     `data.json` findes i migration mappen og er et snapshot fra motorregisterets eksport  2018-09-03. Vær opmærksom på, at patch-systemet ikke holder styr på, hvad der tidligere er kørt, så den rydder tabellerne først. De rå filer direkte fra motorregisteret kan normaliseres ved at køre `-rawDataImportFile migration/ESStatistikListeModtag.xml`. Resultatet af denne giver data.json til brug af førstnævnte kommando. Det er ikke nødvendigt at køre `rawDataImportFile` med mindre der skal importeres en specifik version af motorregisteret udover den jeg har bundlet.
 5) Start applikationen `./motorregister-api`. Der skrives i konsollen, hvilken port den lytter på. Efterfølgende kan `hostname:port` besøges.
 
 ## Endpoints
